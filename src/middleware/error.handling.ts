@@ -4,7 +4,7 @@ export const checkVxc = async (req: any, res: any, next: any) => {
   try {
     const { tenant_id } = req.body;
     const tenantData = await Tenant.findOne({
-      where: { tenant_uuid: tenant_id },
+      where: { tenantUuid: tenant_id },
       raw: true,
     });
     if (!tenantData) {

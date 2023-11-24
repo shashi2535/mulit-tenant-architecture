@@ -1,6 +1,8 @@
 import { DataTypes, Model, Optional, Sequelize } from "sequelize";
 import { sequelizeConnection } from "../config/db.config";
 import { ITenantAttributes } from "../interface";
+import { Author } from "./author";
+import { Tenant_Author } from "./tenant_author";
  type tenantInput = Optional<ITenantAttributes, 'id'>;
 
  export class Tenant extends  Model<ITenantAttributes, tenantInput> implements ITenantAttributes {
@@ -26,43 +28,42 @@ import { ITenantAttributes } from "../interface";
       name: {
         type: DataTypes.STRING,
       },
-      tenant_uuid: {
+      tenantUuid: {
         type: DataTypes.UUID,
       },
 
-      db_name: {
+      dbName: {
         type: DataTypes.UUID,
       },
-      db_port: {
+      dbPort: {
         type: DataTypes.INTEGER,
       },
-      db_user: {
+      dbUser: {
         type: DataTypes.STRING,
       },
-      db_driver: {
+      dbDriver: {
         type: DataTypes.STRING,
       },
-      db_password:{
+      dbPassword:{
         type: DataTypes.STRING,
-      },
-      created_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        field: 'created_at',
-      },
-      updated_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        field: 'updated_at',
       },
     },
     {
-      timestamps: false,
+      timestamps: true,
       sequelize: sequelizeConnection,
       paranoid: true,
       tableName: 'tenant',
       modelName: 'Tenant',
+      underscored:true
     }
   );
+// Tenant.hasMany(Tenant_Author,{as:"tenat_author"})
+
+
+Tenant.belongsToMany(Author, { through:  "Tenant_Author"});
+Author.belongsToMany(Tenant, { through: "Tenant_Author" });
+
+Tenant.addScope('getTenat',{
+    where: { name:"s1" },
+});
+

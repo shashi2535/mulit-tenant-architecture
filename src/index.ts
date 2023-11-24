@@ -1,6 +1,7 @@
 import express from "express"
 import { logger } from "./config";
 import { connection } from "./config/db.config";
+import { Author, Tenant, Tenant_Author } from "./models";
 import {defaultRouter} from "./routes"
 const port = 8000
 const app = express()
@@ -9,6 +10,22 @@ const app = express()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api', defaultRouter);
+
+app.get("/author", async(req,res)=>{
+  const {tenantId,authorId} = req.body
+// const authorData = await Author.create({authorName})
+// const createData = await Tenant_Author.create({
+//   tenantId,
+//   authorId
+// })
+const tenant_authorData = await Author.findAll({include: Tenant})
+console.log("tenant_authorData",tenant_authorData)
+return res.json({
+  statusCode:200,
+  message:"tenant_authorData created successfully",
+  data:tenant_authorData
+})
+})
 
 app.all('*', (req,res, _) => {
 //  return next(new ApiError(`Can't find ${req?.originalUrl} on this server!`, 404))

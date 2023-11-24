@@ -18,12 +18,12 @@ export const createTenant: RequestHandler = async (
         name: name?.trim(),
       },
     });
-    const db_name = `${generateRandomString(6)}_${name}`;
-    const db_driver = "mysql";
-    const db_port = Number(process.env.DB_PORT);
-    const db_host = process.env.DB_HOST as string;
-    const db_user = generateRandomString(6);
-    const db_password = `${db_user}S1234@`;
+    const dbName = `${generateRandomString(6)}_${name}`;
+    const dbDriver = "mysql";
+    const dbPort = Number(process.env.DB_PORT);
+    const dbHost = process.env.DB_HOST as string;
+    const dbUser = generateRandomString(6);
+    const dbPassword = `${dbUser}S1234@`;
     if (tenantData) {
       return res.json({
         statusCode: 400,
@@ -34,30 +34,29 @@ export const createTenant: RequestHandler = async (
     if (!tenantData) {
       const tenantCreateData = await Tenant.create({
         name,
-        db_password,
-        db_name,
-        db_driver,
-        db_port,
-        db_user,
-        tenant_uuid:uuid(),
+        dbPassword,
+        dbName,
+        dbDriver,
+        dbPort,
+        tenantUuid:uuid(),
       });
-
+      
     const data =   await sequelizeConnection.query(
-        `CREATE USER '${db_user}'@'${db_host}' IDENTIFIED BY '${db_password}'`,
+        `CREATE USER '${dbUser}'@'${dbHost}' IDENTIFIED BY '${dbPort}'`,
         { type: QueryTypes.RAW }
       );
-      await sequelizeConnection.query(`CREATE DATABASE ${db_name}`, {
+      await sequelizeConnection.query(`CREATE DATABASE ${dbName}`, {
         type: QueryTypes.RAW,
       });
       await sequelizeConnection.query(
-        `GRANT ALL PRIVILEGES ON ${db_name}.* TO '${db_user}'@'${db_host}'`
+        `GRANT ALL PRIVILEGES ON ${dbName}.* TO '${dbUser}'@'${dbHost}'`
       );
       const vxcString = connectionString(
-        db_user,
-        db_password,
-        db_host,
-        Number(db_port),
-        db_name
+        dbUser,
+        dbPassword,
+        dbHost,
+        Number(dbPort),
+        dbName
       );
       let vxcData = new Sequelize(vxcString);
       vxcData.authenticate().then(() => {
@@ -109,3 +108,44 @@ export const createTodo: RequestHandler = async (req: any, res: any) => {
     });
   }
 };
+
+export const deleteTenant = async(req:Request,res:Response)=>{
+try{
+const { id } = req.params
+const tenantData = await Tenant.findOne({where:{id}})
+if(!tenantData){
+return res.json({
+  statusCode:400,
+  message:"Tenant Not Found"
+})
+}
+// const data =  await Tenant.destroy({where:{id}});
+// console.log("dfff",data)
+return res.json({
+  statusCode:200
+})
+}catch(err:any){
+  return res.json({
+    statusCode:500,
+    message:err.message
+  })
+}
+}
+
+
+export const allTenant = async(req:Request,res:Response)=>{
+  try{
+  const tenantData = await Tenant.scope( "s1").findAll();
+  return res.json({
+    statusCode:200,
+    message:"All Tenant Data Get Successfully",
+    data:tenantData
+  })
+  }catch(err:any){
+    return res.json({
+      statusCode:500,
+      message:err.message
+    })
+  }
+}
+  

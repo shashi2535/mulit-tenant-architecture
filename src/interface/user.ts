@@ -1,14 +1,32 @@
  interface ITenantAttributes {
     id: number;
-    tenant_uuid?: string;
+    tenantUuid?: string;
     name?:string;
-    db_name?:string;
-    db_port?:number;
-    db_user?:string;
-    db_driver?:string;
-    db_password?:string
-    created_at?: Date;
-    updated_at?: Date;
+    dbName?:string;
+    dbPort?:number;
+    dbUser?:string;
+    dbDriver?:string;
+    dbPassword?:string
+    createdAt?: Date;
+    updatedAt?: Date;
+    deletedAt?:Date
   }
 
-export {ITenantAttributes}
+  interface IAuthorAttributes {
+    id: number;
+    authorName?:string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    deletedAt?:Date
+  }
+
+  interface ITenantAuthorAttributes {
+    id: number;
+    tenantId?:number;
+    authorId?:number;
+    createdAt?: Date;
+    updatedAt?: Date;
+    deletedAt?:Date
+  }
+
+export {ITenantAttributes,IAuthorAttributes,ITenantAuthorAttributes}
