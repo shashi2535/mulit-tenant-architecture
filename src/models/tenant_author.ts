@@ -36,5 +36,5 @@ import { Tenant } from "./tenant";
       underscored:true
     }
   );
-  Tenant.belongsToMany(Author, { through: Tenant_Author });
-  Author.belongsToMany(Tenant, { through: Tenant_Author });
+  Tenant.belongsToMany(Author, { through: "Tenant_Author" , as:"tenant_author" });
+  Author.belongsToMany(Tenant, { through: "Tenant_Author", as:"author_tenant" });

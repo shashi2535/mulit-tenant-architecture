@@ -11,6 +11,7 @@ const dbHost = DB_HOST as string;
 const dbDriver = DB_DIALECT as Dialect;
 const dbPassword = DB_PASSWORD as string;
 
+// connection 
 const vxcString = connectionString(
   dbUser,
   dbPassword,
@@ -22,7 +23,7 @@ const vxcString = connectionString(
 let sequelizeConnection = new Sequelize(vxcString, {
   host: dbHost,
   dialect: dbDriver,
-  logging: false,
+  logging: console.log,
 });
 const connection = async () => {
   await sequelizeConnection

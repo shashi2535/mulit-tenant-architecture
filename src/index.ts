@@ -18,8 +18,11 @@ app.get("/author", async(req,res)=>{
 //   tenantId,
 //   authorId
 // })
-const tenant_authorData = await Author.findAll({include: Tenant})
-console.log("tenant_authorData",tenant_authorData)
+const tenant_authorData = await Tenant.findAll({include: {
+  model:Author,
+  as:"tenant_author"
+}})
+// console.log("tenant_authorData",tenant_authorData)
 return res.json({
   statusCode:200,
   message:"tenant_authorData created successfully",

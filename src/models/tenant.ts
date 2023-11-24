@@ -59,10 +59,6 @@ import { Tenant_Author } from "./tenant_author";
   );
 // Tenant.hasMany(Tenant_Author,{as:"tenat_author"})
 
-
-Tenant.belongsToMany(Author, { through:  "Tenant_Author"});
-Author.belongsToMany(Tenant, { through: "Tenant_Author" });
-
 Tenant.addScope('getTenat',{
     where: { name:"s1" },
 });
